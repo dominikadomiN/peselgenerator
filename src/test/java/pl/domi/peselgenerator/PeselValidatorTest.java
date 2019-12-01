@@ -1,10 +1,8 @@
 package pl.domi.peselgenerator;
 
 import org.junit.Test;
-import pl.domi.peselgenerator.model.Gender;
 import pl.domi.peselgenerator.validator.PeselValidator;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -43,33 +41,6 @@ public class PeselValidatorTest {
         assertFalse(actual);
     }
 
-    @Test
-    public void shouldReturnGenderWoman() {
-        //given
-        Gender expected = Gender.WOMAN;
-        //when
-        Gender actual = peselValidator.getGender("47080108480");
-        //then
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    public void shouldReturnGenderMan() {
-        //given
-        Gender expected = Gender.MAN;
-        //when
-        Gender actual = peselValidator.getGender("64061707959");
-        //then
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    public void shouldReturnControlNumber() {
-        //when
-        int actual = peselValidator.getControlDigit("78060608319");
-        //then
-        assertEquals(9, actual);
-    }
 
     @Test
     public void isValid_shouldReturnTrueWithCorrectPesel() {

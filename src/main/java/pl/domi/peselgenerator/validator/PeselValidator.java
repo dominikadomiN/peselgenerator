@@ -1,17 +1,8 @@
 package pl.domi.peselgenerator.validator;
 
-import pl.domi.peselgenerator.model.Gender;
+import pl.domi.peselgenerator.model.Pesel;
 
 public class PeselValidator implements IPeselValidator {
-
-    public Gender getGender(String pesel) {
-        int number = Integer.parseInt(pesel.substring(9, 10));
-
-        if (number % 2 == 0) {
-            return Gender.WOMAN;
-        }
-        return Gender.MAN;
-    }
 
     public boolean isValid(String pesel) {
         if (!hasCorrectLength(pesel)) {
@@ -29,7 +20,8 @@ public class PeselValidator implements IPeselValidator {
         int ninthDigitCheck = 9 * Integer.parseInt(pesel.substring(8, 9));
         int tenthDigitCheck = 7 * Integer.parseInt(pesel.substring(9, 10));
 
-        int eleventhDigit = getControlDigit(pesel);
+        Pesel p = new Pesel(pesel);
+        int eleventhDigit = p.getControlDigit();
 
         int sum = firstDigitCheck + secondDigitCheck + thirdDigitCheck + forthDigitCheck + fifthDigitCheck +
                 sixthDigitCheck + seventhDigitCheck + eighthDigitCheck + ninthDigitCheck + tenthDigitCheck;
@@ -39,9 +31,5 @@ public class PeselValidator implements IPeselValidator {
 
     private boolean hasCorrectLength(String pesel) {
         return pesel != null && !pesel.isEmpty() && pesel.length() == 11;
-    }
-
-    public int getControlDigit(String pesel) {
-        return Integer.parseInt(pesel.substring(10));
     }
 }
