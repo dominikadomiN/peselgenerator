@@ -1,9 +1,6 @@
-package pl.domi.peselgenerator;
+package pl.domi.peselgenerator.model;
 
 import org.junit.Test;
-import pl.domi.peselgenerator.model.Gender;
-import pl.domi.peselgenerator.model.Month;
-import pl.domi.peselgenerator.model.Pesel;
 import pl.domi.peselgenerator.validator.exception.PeselValidatorException;
 
 import static org.junit.Assert.assertEquals;

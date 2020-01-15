@@ -1,7 +1,6 @@
-package pl.domi.peselgenerator;
+package pl.domi.peselgenerator.validator;
 
 import org.junit.Test;
-import pl.domi.peselgenerator.validator.PeselValidator;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
