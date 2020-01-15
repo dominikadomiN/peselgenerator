@@ -2,9 +2,8 @@ package pl.domi.peselgenerator.generator;
 
 import pl.domi.peselgenerator.generator.exception.PeselGeneratorException;
 import pl.domi.peselgenerator.model.Gender;
-import pl.domi.peselgenerator.model.Month;
-import pl.domi.peselgenerator.validator.IPeselValidator;
 
+import java.time.LocalDate;
 import java.util.Random;
 
 public class PeselGenerator implements IPeselGenerator {
@@ -12,63 +11,48 @@ public class PeselGenerator implements IPeselGenerator {
     private static final String[] WOMAN = {"0", "2", "4", "6", "8"};
     private static final String[] MAN = {"1", "3", "5", "7", "9"};
 
-    private final IPeselValidator peselValidator;
-
-    public PeselGenerator(IPeselValidator peselValidator) {
-        this.peselValidator = peselValidator;
-    }
-
     @Override
-    public String generate(String year, Month month, String day, Gender gender) throws PeselGeneratorException {
-        if (year == null || month == null || day == null || gender == null) {
+    public String generate(LocalDate dateOfBirth, Gender gender) throws PeselGeneratorException {
+        if (dateOfBirth == null || gender == null) {
             throw new PeselGeneratorException();
         }
 
-        String pesel = generateYearNumber(year)
-                + generateMonthNumber(month, year)
-                + generateDayNumber(day)
+
+        String pesel = generateYearNumber(dateOfBirth.getYear())
+                + generateMonthNumber(dateOfBirth.getMonthValue(), dateOfBirth.getYear())
+                + generateDayNumber(dateOfBirth.getDayOfMonth())
                 + generateRandomDigit()
                 + generateRandomDigit()
                 + generateRandomDigit()
                 + genderNumberGenerator(gender);
 
-        pesel = pesel + generateControlDigit(pesel);
-
-        boolean isPeselValid = peselValidator.isValid(pesel);
-
-        if (isPeselValid) {
-            return pesel;
-        }
-        throw new PeselGeneratorException("PESEL cannot be generated");
+        return pesel + generateControlDigit(pesel);
     }
 
-    private String generateYearNumber(String year) {
-        return year.substring(2, 4);
+    private String generateYearNumber(int year) {
+        int yearForPesel = year % 100;
+        return String.valueOf(yearForPesel);
     }
 
-    private String generateMonthNumber(Month month, String year) throws PeselGeneratorException {
-        if (year.substring(0, 2).isEmpty()) {
+    private String generateMonthNumber(int month, int year) throws PeselGeneratorException {
+        if (year < 1800 || year > 2099) {
             throw new PeselGeneratorException("Year is not valid to generate pesel");
         }
-        int monthNumber = 0;
-        String century = year.substring(0, 2);
-        switch (century) {
-            case "18":
-                monthNumber = 80;
+        int monthNumber = month;
+        int firstPartOfYear = year / 100;
+        switch (firstPartOfYear) {
+            case 18:
+                monthNumber += 80;
                 break;
-            case "19":
-                monthNumber = 0;
-                break;
-            case "20":
-                monthNumber = 20;
+            case 20:
+                monthNumber += 20;
                 break;
         }
-        monthNumber += month.ordinal() + 1;
         return String.format("%02d", monthNumber);
     }
 
-    private String generateDayNumber(String day) {
-        return day;
+    private String generateDayNumber(int day) {
+        return String.format("%02d", day);
     }
 
     private String generateRandomDigit() {
