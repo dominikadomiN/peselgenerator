@@ -1,5 +1,6 @@
 package pl.domi.peselgenerator.generator;
 
+import pl.domi.peselgenerator.generator.controldigit.ControlDigitGenerator;
 import pl.domi.peselgenerator.generator.exception.PeselGeneratorException;
 import pl.domi.peselgenerator.model.Gender;
 
@@ -10,13 +11,17 @@ public class PeselGenerator implements IPeselGenerator {
 
     private static final String[] WOMAN = {"0", "2", "4", "6", "8"};
     private static final String[] MAN = {"1", "3", "5", "7", "9"};
+    private ControlDigitGenerator controlDigitGenerator;
+
+    public PeselGenerator(ControlDigitGenerator controlDigitGenerator) {
+        this.controlDigitGenerator = controlDigitGenerator;
+    }
 
     @Override
     public String generate(LocalDate dateOfBirth, Gender gender) throws PeselGeneratorException {
         if (dateOfBirth == null || gender == null) {
             throw new PeselGeneratorException();
         }
-
 
         String pesel = generateYearNumber(dateOfBirth.getYear())
                 + generateMonthNumber(dateOfBirth.getMonthValue(), dateOfBirth.getYear())
@@ -69,20 +74,7 @@ public class PeselGenerator implements IPeselGenerator {
     }
 
     private String generateControlDigit(String pesel) {
-        int firstDigitCheck = 9 * Integer.parseInt(pesel.substring(0, 1));
-        int secondDigitCheck = 7 * Integer.parseInt(pesel.substring(1, 2));
-        int thirdDigitCheck = 3 * Integer.parseInt(pesel.substring(2, 3));
-        int forthDigitCheck = Integer.parseInt(pesel.substring(3, 4));
-        int fifthDigitCheck = 9 * Integer.parseInt(pesel.substring(4, 5));
-        int sixthDigitCheck = 7 * Integer.parseInt(pesel.substring(5, 6));
-        int seventhDigitCheck = 3 * Integer.parseInt(pesel.substring(6, 7));
-        int eighthDigitCheck = Integer.parseInt(pesel.substring(7, 8));
-        int ninthDigitCheck = 9 * Integer.parseInt(pesel.substring(8, 9));
-        int tenthDigitCheck = 7 * Integer.parseInt(pesel.substring(9, 10));
-
-        int sum = firstDigitCheck + secondDigitCheck + thirdDigitCheck + forthDigitCheck + fifthDigitCheck +
-                sixthDigitCheck + seventhDigitCheck + eighthDigitCheck + ninthDigitCheck + tenthDigitCheck;
-
-        return String.valueOf(sum);
+        int controlDigit = controlDigitGenerator.generateControlDigit(pesel);
+        return String.valueOf(controlDigit);
     }
 }

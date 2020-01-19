@@ -1,59 +1,69 @@
 package pl.domi.peselgenerator.validator;
 
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import pl.domi.peselgenerator.generator.controldigit.ControlDigitGenerator;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+@RunWith(JUnitParamsRunner.class)
 public class PeselValidatorTest {
-    private PeselValidator peselValidator = new PeselValidator();
+    private PeselValidator peselValidator;
+    private ControlDigitGenerator controlDigitGeneratorMock;
 
-    @Test
-    public void verifyingPesel_withCorrectPesel() {
-        //when
-        boolean actual = peselValidator.isValid("67050402916");
-        //then
-        assertTrue(actual);
+    @Before
+    public void setUp() {
+        this.controlDigitGeneratorMock = Mockito.mock(ControlDigitGenerator.class);
+        this.peselValidator = new PeselValidator(controlDigitGeneratorMock);
+    }
+
+    private Object[][] parametersForVerifyingPesel() {
+        return new Object[][]{
+                {"67050402916", 6, true},
+                {"44051401358", 0, false}
+        };
+    }
+
+    private Object[][] parametersForVerifyingInvalidPesel() {
+        return new Object[][]{
+                {"670504029"},
+                {"null"},
+                {""}
+        };
     }
 
     @Test
-    public void verifyingPesel_withShorterInvalidPesel() {
+    @Parameters(method = "parametersForVerifyingPesel")
+    public void verifyingPesel_withCorrectPesel(String pesel,
+                                                int generatedControlDigit,
+                                                boolean expectedResult) {
+        //given
+        when(controlDigitGeneratorMock.generateControlDigit(pesel)).thenReturn(generatedControlDigit);
         //when
-        boolean actual = peselValidator.isValid("670504029");
+        boolean actual = peselValidator.isValid(pesel);
         //then
-        assertFalse(actual);
+        assertEquals(expectedResult, actual);
+        verify(controlDigitGeneratorMock).generateControlDigit(pesel);
     }
 
     @Test
-    public void verifyingPesel_withNullPesel() {
+    @Parameters(method = "parametersForVerifyingInvalidPesel")
+    public void verifyingPesel_withIncorrectValue(String pesel) {
+        //given
+        when(controlDigitGeneratorMock.generateControlDigit(pesel)).thenReturn(0);
         //when
-        boolean actual = peselValidator.isValid(null);
-        //then
-        assertFalse(actual);
-    }
-
-    @Test
-    public void verifyingPesel_withEmptyPesel() {
-        //when
-        boolean actual = peselValidator.isValid("");
-        //then
-        assertFalse(actual);
-    }
-
-
-    @Test
-    public void isValid_shouldReturnTrueWithCorrectPesel() {
-        //when
-        boolean actual = peselValidator.isValid("44051401359");
-        //then
-        assertTrue(actual);
-    }
-
-    @Test
-    public void isValid_shouldReturnFalseWithWrongPesel() {
-        //when
-        boolean actual = peselValidator.isValid("44051401358");
+        boolean actual = peselValidator.isValid(pesel);
         //then
         assertFalse(actual);
+        verify(controlDigitGeneratorMock, never()).generateControlDigit(pesel);
     }
+
 }
