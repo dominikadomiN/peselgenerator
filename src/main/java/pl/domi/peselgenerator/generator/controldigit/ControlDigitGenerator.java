@@ -2,7 +2,7 @@ package pl.domi.peselgenerator.generator.controldigit;
 
 public class ControlDigitGenerator {
 
-    public int generateControlDigit(String pesel) {
+    public static int generateControlDigit(String pesel) {
 
         int firstDigitCheck = 9 * Integer.parseInt(pesel.substring(0, 1));
         int secondDigitCheck = 7 * Integer.parseInt(pesel.substring(1, 2));

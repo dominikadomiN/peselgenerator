@@ -11,10 +11,8 @@ public class PeselGenerator implements IPeselGenerator {
 
     private static final String[] WOMAN = {"0", "2", "4", "6", "8"};
     private static final String[] MAN = {"1", "3", "5", "7", "9"};
-    private ControlDigitGenerator controlDigitGenerator;
 
-    public PeselGenerator(ControlDigitGenerator controlDigitGenerator) {
-        this.controlDigitGenerator = controlDigitGenerator;
+    public PeselGenerator() {
     }
 
     @Override
@@ -74,7 +72,7 @@ public class PeselGenerator implements IPeselGenerator {
     }
 
     private String generateControlDigit(String pesel) {
-        int controlDigit = controlDigitGenerator.generateControlDigit(pesel);
+        int controlDigit = ControlDigitGenerator.generateControlDigit(pesel);
         return String.valueOf(controlDigit);
     }
 }

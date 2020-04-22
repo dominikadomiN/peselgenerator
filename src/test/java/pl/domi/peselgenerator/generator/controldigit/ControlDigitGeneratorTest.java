@@ -1,17 +1,19 @@
 package pl.domi.peselgenerator.generator.controldigit;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ControlDigitGeneratorTest {
-
-    private ControlDigitGenerator controlDigitGenerator = new ControlDigitGenerator();
+class ControlDigitGeneratorTest {
 
     @Test
-    public void shouldGenerateControlDigit() {
-        //given, when
+    void shouldGenerateControlDigit() {
+        //given
+        ControlDigitGenerator controlDigitGenerator = new ControlDigitGenerator();
+
+        // when
         int actual = controlDigitGenerator.generateControlDigit("89102454133");
+
         //then
         assertEquals(3, actual);
     }
