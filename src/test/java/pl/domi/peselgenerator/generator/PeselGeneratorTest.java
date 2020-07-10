@@ -33,11 +33,11 @@ class PeselGeneratorTest {
                              String expectedDay,
                              int expectedGenderModule) throws PeselGeneratorException {
         // given
-        PeselGenerator peselGenerator = new PeselGenerator();
+        var peselGenerator = new PeselGenerator();
 
         // when
-        String actual = peselGenerator.generate(dateOfBirth, gender);
-        int actualGenderModule = parseInt(actual.substring(9, 10)) % 2;
+        var actual = peselGenerator.generate(dateOfBirth, gender);
+        var actualGenderModule = parseInt(actual.substring(9, 10)) % 2;
 
         //then
         assertAll(
@@ -60,7 +60,7 @@ class PeselGeneratorTest {
     @MethodSource("parametersForShouldPeselGeneratorException_whenDateOfBirthOrGenderNull")
     void shouldThrowsPeselGeneratorException(LocalDate givenDateOfBirth, Gender givenGender) {
         // given
-        PeselGenerator peselGenerator = new PeselGenerator();
+        var peselGenerator = new PeselGenerator();
 
         //when, then
         assertThrows(PeselGeneratorException.class, () -> peselGenerator.generate(givenDateOfBirth, givenGender));

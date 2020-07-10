@@ -24,10 +24,10 @@ class PeselTest {
     @MethodSource("parametersForVerifyingGender")
     void shouldReturnGender(String peselValue, Gender expectedGender) throws PeselValidatorException {
         //given
-        Pesel pesel = new Pesel(peselValue);
+        var pesel = new Pesel(peselValue);
 
         //when
-        Gender actual = pesel.getGender();
+        var actual = pesel.getGender();
 
         //then
         assertEquals(expectedGender, actual);
@@ -47,10 +47,10 @@ class PeselTest {
     void shouldReturnDateOfBirth(String peselValue,
                                  LocalDate expectedDateOfBirth) throws PeselValidatorException {
         //given
-        Pesel pesel = new Pesel(peselValue);
+        var pesel = new Pesel(peselValue);
 
         //when
-        LocalDate actual = pesel.getDateOfBirth();
+        var actual = pesel.getDateOfBirth();
 
         //then
         assertEquals(expectedDateOfBirth, actual);
